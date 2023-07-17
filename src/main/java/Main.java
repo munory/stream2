@@ -8,9 +8,9 @@ public class Main {
 
         List<String> families = Arrays.asList("Evans", "Young", "Harris", "Wilson", "Davies", "Adamson", "Brown");
 
-        Collection<Person> persons = new ArrayList<>();
+        List<Person> persons = new ArrayList<>();
 
-        for (int i = 0; i < 10_000_000; i++) {
+        for (int i = 0; i < 100; i++) {
 
             persons.add(new Person(
                     names.get(new Random().nextInt(names.size())),
@@ -21,30 +21,40 @@ public class Main {
             );
         }
 
-        var teenCount = persons
+        System.out.println(teenCount(persons));
+
+        conscripts(persons).forEach(System.out::println);
+
+        workers(persons).forEach(System.out::println);
+    }
+
+    public static Long teenCount(List<Person> persons) {
+
+        return persons
                 .stream()
                 .filter(person -> person.getAge() < 18)
                 .count();
 
-        System.out.println(teenCount);
+    }
 
-        var conscripts = persons
+    public static List<String> conscripts(List<Person> persons) {
+
+        return persons
                 .stream()
                 .filter(person -> person.getSex().equals(Sex.MAN))
                 .filter(person -> person.getAge() >= 18 && person.getAge() < 27)
                 .map(Person::getFamily)
                 .toList();
+    }
 
-        conscripts.forEach(System.out::println);
+    public static List<Person> workers(List<Person> persons) {
 
-        var worker = persons
+        return persons
                 .stream()
                 .filter(p -> p.getAge() >= 18 && ((p.getSex().equals(Sex.WOMAN) && p.getAge() <= 60) ||
                         (p.getSex().equals(Sex.MAN) && p.getAge() <= 65)))
                 .filter(person -> person.getEducation().equals(Education.HIGHER))
                 .sorted(Comparator.comparing(Person::getFamily))
                 .toList();
-
-        worker.forEach(System.out::println);
     }
 }
